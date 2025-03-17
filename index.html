@@ -15,10 +15,30 @@
 <body style='margin: 0; overflow: hidden;'>
     <a-scene
         vr-mode-ui="enabled: false"
-		embedded
+        embedded
         arjs='sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;'>
-        <a-entity gltf-model="./assets/magnemite/scene.gltf" rotation="0 180 0" scale="0.05 0.05 0.05" gps-entity-place="latitude: -27.4708317; longitude: -58.8143963;"/>
+        <a-entity id="model" gltf-model="./assets/magnemite/scene.gltf" rotation="0 180 0" scale="0.15 0.15 0.15" gps-entity-place="latitude: 0; longitude: 0;"/>
 
         <a-camera gps-camera rotation-reader></a-camera>
-	</a-scene>
+    </a-scene>
+
+    <script>
+        // Function to update the model's position with the user's location
+        function updateModelPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const model = document.getElementById('model');
+            model.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
+        }
+
+        // Check if Geolocation is available
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(updateModelPosition, (error) => {
+                console.error('Error getting location', error);
+            });
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    </script>
 </body>
+</html>
