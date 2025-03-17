@@ -10,9 +10,21 @@
     <script>
         THREEx.ArToolkitContext.baseURL = 'https://raw.githack.com/jeromeetienne/ar.js/master/three.js/'
     </script>
+    <style>
+        #status {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
 </head>
 
 <body style='margin: 0; overflow: hidden;'>
+    <div id="status">Getting location...</div>
     <a-scene
         vr-mode-ui="enabled: false"
         embedded
@@ -29,15 +41,18 @@
             const longitude = position.coords.longitude;
             const model = document.getElementById('model');
             model.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
+            document.getElementById('status').innerText = `Location set: ${latitude}, ${longitude}`;
         }
 
         // Check if Geolocation is available
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(updateModelPosition, (error) => {
                 console.error('Error getting location', error);
+                document.getElementById('status').innerText = 'Error getting location';
             });
         } else {
             console.error('Geolocation is not supported by this browser.');
+            document.getElementById('status').innerText = 'Geolocation is not supported by this browser.';
         }
     </script>
 </body>
